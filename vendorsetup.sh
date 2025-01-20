@@ -1,0 +1,3 @@
+add_lunch_combo aosp_j1xlte-eng
+add_lunch_combo aosp_j1xlte-user
+add_lunch_combo aosp_j1xlte-userdebug
