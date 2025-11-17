@@ -31,6 +31,8 @@
 #include <string.h>
 #define _REALLY_INCLUDE_SYS__SYSTEM_PROPERTIES_H_
 #include <sys/_system_properties.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include <android-base/file.h>
 #include <android-base/logging.h>
@@ -43,6 +45,7 @@
 using android::base::GetProperty;
 using android::base::ReadFileToString;
 using android::base::Trim;
+using android::base::SetProperty;
 
 void property_override(char const prop[], char const value[])
 {
@@ -71,7 +74,7 @@ void set_sim_info()
         simslot_count = Trim(simslot_count); // strip newline
         property_override("ro.multisim.simslotcount", simslot_count.c_str());
         if (simslot_count.compare("2") == 0) {
-            property_override("rild.libpath2", "/system/lib/libsec-ril-dsds.so");
+            property_override("vendor.rild.libpath2", "/system/lib/libsec-ril-dsds.so");
             property_override("persist.radio.multisim.config", "dsds");
         }
     }
@@ -88,7 +91,7 @@ void vendor_load_properties()
     if (bootloader.find("J120F") != std::string::npos) {
         /* SM-J120F */
         property_override_dual("ro.product.model", "ro.vendor.product.model", "SM-J120F");
-     } else if (bootloader.find("J120FN") != std::string::npos) {
+    } else if (bootloader.find("J120FN") != std::string::npos) {
         /* SM-J120FN */
         property_override_dual("ro.product.model", "ro.vendor.product.model", "SM-J120FN");
     } else if (bootloader.find("J120G") != std::string::npos) {
@@ -98,10 +101,10 @@ void vendor_load_properties()
         /* SM-J120W */
         property_override_dual("ro.product.model", "ro.vendor.product.model", "SM-J120W");
     } else {
-        /* SM-A310Y */
+        /* Forcing SM-J120F */
         property_override_dual("ro.product.model", "ro.vendor.product.model", "SM-J120F");
     }
-    
+
     property_override_dual("ro.build.fingerprint", "ro.vendor.build.fingerprint", "samsung/j1xltejt/j1xlte:5.1.1/LMY47X/J120FXXU2AQH1:user/release-keys");
     property_override("ro.system.build.fingerprint", "samsung/j1xltejt/j1xlte:5.1.1/LMY47X/J120FXXU2AQH1:user/release-keys");
     property_override("ro.build.description", "j1xltejt-user 5.1.1 LMY47X J120FXXU2AQH1 release-keys");
